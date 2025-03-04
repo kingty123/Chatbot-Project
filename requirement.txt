@@ -13,7 +13,9 @@ unstructured
 python-magic-bin
 faiss-cpu
 pyttsx3
-whisper
+openai-whisper
 sounddevice
 pygame
 gtts
+pyaudio
+scipy
