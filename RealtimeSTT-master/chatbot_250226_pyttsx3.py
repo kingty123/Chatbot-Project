@@ -1,5 +1,5 @@
 import sys
-sys.stdout.reconfigure(encoding='utf-8')        # 이모티콘 사용 요이
+sys.stdout.reconfigure(encoding='utf-8')        # 이모티콘 사용 용이
 
 import streamlit as st
 import sounddevice as sd
@@ -54,7 +54,7 @@ if 'chat_history' not in st.session_state:
 
 # 음성 녹음 함수
 def record_audio(duration=6, samplerate=44100):
-    st.write("🎤 녹음 중 입니다. 말쑴해주세요!")
+    st.write("🎤 녹음 중 입니다. 말씀씀해주세요!")
     audio_data = sd.rec(int(duration * samplerate), samplerate=samplerate, channels=1, dtype=np.int16)
     sd.wait()
     temp_audio_file = tempfile.NamedTemporaryFile(delete=False, suffix=".wav")
