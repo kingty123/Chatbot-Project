@@ -1,5 +1,5 @@
 import sys
-sys.stdout.reconfigure(encoding='utf-8')        # 이모티콘 사용 용이
+sys.stdout.reconfigure(encoding='utf-8')        # 이모티콘 사용 요이
 
 import streamlit as st
 import sounddevice as sd
@@ -11,14 +11,17 @@ import openai
 import warnings
 import pyttsx3
 from gtts import gTTS
+#import re
+from openai import OpenAI
 from scipy.io.wavfile import write
 from dotenv import load_dotenv
+#from io import BytesIO
 
 
 st.set_page_config(layout="centered", initial_sidebar_state="expanded")
 
 warnings.filterwarnings("ignore")
-ai_img = "IMAGE-you-want"
+ai_img = "WOODZ_군복.jpg"
 user_img = "사람이미지_1.jpg"
 
 
@@ -27,7 +30,7 @@ model = whisper.load_model("base", device="cpu")
 
 # 환경변수 로드
 load_dotenv()
-openai.api_key = os.environ['OPENAI_API_KEY']
+client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 
 st.title("🎙️ SelenaAI ")
 
@@ -54,7 +57,7 @@ if 'chat_history' not in st.session_state:
 
 # 음성 녹음 함수
 def record_audio(duration=6, samplerate=44100):
-    st.write("🎤 녹음 중 입니다. 말씀씀해주세요!")
+    st.write("🎤 녹음 중 입니다. 말쑴해주세요!")
     audio_data = sd.rec(int(duration * samplerate), samplerate=samplerate, channels=1, dtype=np.int16)
     sd.wait()
     temp_audio_file = tempfile.NamedTemporaryFile(delete=False, suffix=".wav")
@@ -89,17 +92,20 @@ def speak_pyttsx3(text):
 
 # gTTS 음성 출력 함수
 def speak_gtts(text):
-    tts = gTTS(text=text, lang='ko', slow=False)
-    temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".mp3")
-    tts.save(temp_file.name)
-    
-    # Streamlit에서 오디오 재생
-    st.audio(temp_file.name, format="audio/mp3")
-    os.remove(temp_file.name)
+    try:
+        tts = gTTS(text=text, lang='ko', slow=False)
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as temp_file:
+            tts.save(temp_file.name)
+            st.audio(temp_file.name, format="audio/mp3")
+    except Exception as e:
+        st.error(f"❌ gTTS 오류 발생: {e}")
+    finally:
+        if 'temp_file' in locals() and os.path.exists(temp_file.name):
+            os.remove(temp_file.name)
 
 # 최종 TTS 실행 함수
 def speak(text):
-    if tts_engine == "pyttsx3 (오프라인)":
+    if tts_engine == "오프라인":
         speak_pyttsx3(text)
     else:
         speak_gtts(text)
@@ -107,13 +113,19 @@ def speak(text):
 # GPT 응답 생성
 def ask_gpt(user_input):
     try:
-        response = openai.ChatCompletion.create(
-            model="gpt-4-turbo", 
-            messages=[{"role": "user", "content": user_input}]
+        chat_completion = client.chat.completions.create(
+            messages=[
+                {
+                    "role": "user",
+                    "content": user_input,
+                }
+            ],
+            model="gpt-4-turbo",
         )
-        return response["choices"][0]["message"]["content"]
+        return chat_completion.choices[0].message.content
     except Exception as e:
         return f"❌ 오류 발생: {str(e)}"
+
 
 
 # 음성 녹음 버튼
