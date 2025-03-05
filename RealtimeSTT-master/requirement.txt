@@ -1,7 +1,7 @@
 numpy
 pandas
 streamlit 
-openai
+openai>=1.0.0
 python-dotenv
 streamlit-folium
 streamlit-geolocation
@@ -20,7 +20,7 @@ RealtimeSTT
 PyAudio==0.2.14
 faster-whisper==1.1.1
 pvporcupine==1.9.5
-webrtcvad==2.0.14
+webrtcvad==2.0.10
 halo==0.0.31
 torch
 torchaudio
