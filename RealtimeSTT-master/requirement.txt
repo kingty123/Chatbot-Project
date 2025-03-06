@@ -3,17 +3,8 @@ pandas
 streamlit 
 openai>=1.0.0
 python-dotenv
-fastapi==0.115.0
-langchain
-langchain-openai
-langchain-community==0.3.17
-unstructured
-python-magic-bin
-faiss-cpu
-pyttsx3
 sounddevice
 gtts
-PyAudio==0.2.14
 faster-whisper==1.1.1
 torch
 scipy==1.15.1
