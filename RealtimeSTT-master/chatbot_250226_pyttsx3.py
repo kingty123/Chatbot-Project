@@ -5,19 +5,16 @@ import streamlit as st
 import streamlit.components.v1 as components
 import sounddevice as sd
 import numpy as np
-# import whisper
 import tempfile
 import os
-# import openai
 import warnings
 import pyttsx3                                  # TTS
 from gtts import gTTS
-#import re
 from openai import OpenAI
 from scipy.io.wavfile import write
 from dotenv import load_dotenv
 import faster_whisper                           # STT
-#from io import BytesIO
+
 
 # streamlit 서버 임포트
 st.set_page_config(layout="centered", initial_sidebar_state="expanded")
@@ -71,8 +68,7 @@ css = """
         }   
     </style>
 """
-#     unsafe_allow_html=True,
-# )
+
 
 
 # 스크롤 버튼 추가 CSS 형식 (버튼을 오른쪽 하단에 고정)
@@ -102,7 +98,6 @@ scroll_css = """
         }
     </style>
 """
-# st.markdown(scroll_css, unsafe_allow_html=True)
 
 
 # JavaScript로 스크롤 기능 추가
@@ -116,7 +111,6 @@ js = """
         }
     </script>
 """
-# st.markdown(scroll_js, unsafe_allow_html=True)
 
 
 # HTML로 버튼 추가 (오른쪽 하단에 고정)
@@ -126,7 +120,7 @@ html = """
         <button onclick="scrollToBottom()">⬇️</button>
     </div>
 """
-# st.markdown(scroll_buttons_html, unsafe_allow_html=True)
+
 
 # Streamlit 컴포넌트 생성
 components.html(
@@ -152,7 +146,6 @@ model = load_faster_whisper_model()
 
 # 환경변수 로드
 load_dotenv()
-#openai.api_key = os.environ['OPENAI_API_KEY']
 client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 
 # st.title("🎙️ SelenaAI ")
@@ -188,12 +181,6 @@ def record_audio(duration=6, samplerate=44100):
     write(temp_audio_file.name, samplerate, audio_data)
     return temp_audio_file.name
 
-
-# # 음성 -> 텍스트 : STT
-# def speech_to_text(audio_file):
-#     audio = whisper.load_audio(audio_file)
-#     result = model.transcribe(audio)
-#     return result["text"]
 
 # 음성 -> 텍스트 : STT (faster-whisper 사용)
 def speech_to_text(audio_file):
@@ -268,13 +255,11 @@ if st.button("🎤 SelenaAI 입니다. 무엇이든 편하게 질문하세요"):
     audio_file = record_audio()
     st.success("✅ 녹음 완료! 음성 변환 중 입니다...")
     text_input = speech_to_text(audio_file)
-    # st.write(f"📝 {text_input}")
     response = ask_gpt(text_input)
 
     #col1, col2 = st.columns(2)
     
     # 사용자 이미지와 함께 메시지를 왼쪽에 출력
-    #with col1:
     with st.chat_message("user"):
         st.image(user_img, width=50)
         st.write(text_input)
@@ -284,7 +269,6 @@ if st.button("🎤 SelenaAI 입니다. 무엇이든 편하게 질문하세요"):
     
     
     # 챗봇 이미지와 함께 메시지를 오른쪽에 출력
-    #with col2:
     with st.chat_message("assistant"):
         st.image(ai_img, width=50)
         st.write(response)
