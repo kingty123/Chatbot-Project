@@ -3,8 +3,6 @@ pandas
 streamlit 
 openai>=1.0.0
 python-dotenv
-streamlit-folium
-streamlit-geolocation
 fastapi==0.115.0
 langchain
 langchain-openai
@@ -16,15 +14,8 @@ pyttsx3
 sounddevice
 pygame
 gtts
-RealtimeSTT
 PyAudio==0.2.14
 faster-whisper==1.1.1
-pvporcupine==1.9.5
-webrtcvad==2.0.10
-halo==0.0.31
 torch
-torchaudio
 scipy==1.15.1
-openwakeword>=0.4.0
-websockets==14.2
-websocket-client==1.8.0
+
