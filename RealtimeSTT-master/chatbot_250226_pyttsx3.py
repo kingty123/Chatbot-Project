@@ -2,6 +2,7 @@ import sys
 sys.stdout.reconfigure(encoding='utf-8')        # 이모티콘 사용 용이
 
 import streamlit as st
+import streamlit.components.v1 as components
 import sounddevice as sd
 import numpy as np
 # import whisper
@@ -21,6 +22,120 @@ import faster_whisper                           # STT
 # streamlit 서버 임포트
 st.set_page_config(layout="centered", initial_sidebar_state="expanded")
 
+# 채팅 UI CSS 스타일 정의
+css = """
+    <style>
+        .chat-container {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .chat-image {
+            width: 100px;
+            height: 150px;
+            border-radius: 10%;
+            margin: 0 15px;
+            object-fit: cover;
+        }
+
+        .chat-message {
+            background-color: #f0f2f6;
+            padding: 10px;
+            border-radius: 10px;
+            max-width: 80%;
+        }
+
+        .chat-container.ai {
+            flex-direction: row-reverse;
+            text-align: right;
+        }     
+
+        .chat-message.ai {
+            margin-right: 0;
+        }
+
+        .scroll-buttons {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1000;
+        }
+        
+        .scroll-buttons button:hover {
+            background-color: #f0f0f0;
+        }   
+    </style>
+"""
+#     unsafe_allow_html=True,
+# )
+
+
+# 스크롤 버튼 추가 CSS 형식 (버튼을 오른쪽 하단에 고정)
+scroll_css = """
+    <style>
+        .scroll-buttons {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1000;
+        }
+        .scroll-buttons button {
+            width: 50px;
+            height: 50px;
+            font-size: 20px;
+            border-radius: 50%;
+            border: none;
+            background-color: #ffffff;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+        }
+        .scroll-buttons button:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
+"""
+# st.markdown(scroll_css, unsafe_allow_html=True)
+
+
+# JavaScript로 스크롤 기능 추가
+js = """
+    <script>
+        function scrollToTop() {
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+        function scrollToBottom() {
+            window.scrollTo({top: document.body.scrollHeight, behavior: 'smooth'});
+        }
+    </script>
+"""
+# st.markdown(scroll_js, unsafe_allow_html=True)
+
+
+# HTML로 버튼 추가 (오른쪽 하단에 고정)
+html = """
+    <div class="scroll-buttons">
+        <button onclick="scrollToTop()">⬆️</button>
+        <button onclick="scrollToBottom()">⬇️</button>
+    </div>
+"""
+# st.markdown(scroll_buttons_html, unsafe_allow_html=True)
+
+# Streamlit 컴포넌트 생성
+components.html(
+    css + js + html,
+    height=200,  # 필요에 따라 높이 조정
+)
+
+
+st.title("🎙️ SelenaAI ")
 
 warnings.filterwarnings("ignore")
 ai_img = "WOODZ_군복.jpg"
@@ -40,7 +155,7 @@ load_dotenv()
 #openai.api_key = os.environ['OPENAI_API_KEY']
 client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 
-st.title("🎙️ SelenaAI ")
+# st.title("🎙️ SelenaAI ")
 
 # 사이드바 생성
 with st.sidebar.container():
@@ -156,23 +271,23 @@ if st.button("🎤 SelenaAI 입니다. 무엇이든 편하게 질문하세요"):
     # st.write(f"📝 {text_input}")
     response = ask_gpt(text_input)
 
-    col1, col2 = st.columns(2)
+    #col1, col2 = st.columns(2)
     
     # 사용자 이미지와 함께 메시지를 왼쪽에 출력
-    with col1:
-        with st.chat_message("user"):
-            st.image(user_img, width=50)
-            st.write(text_input)
+    #with col1:
+    with st.chat_message("user"):
+        st.image(user_img, width=50)
+        st.write(text_input)
 
 
     # response = ask_gpt(text_input)
     
     
     # 챗봇 이미지와 함께 메시지를 오른쪽에 출력
-    with col2:
-        with st.chat_message("assistant"):
-            st.image(ai_img, width=50)
-            st.write(response)
+    #with col2:
+    with st.chat_message("assistant"):
+        st.image(ai_img, width=50)
+        st.write(response)
 
 
     st.session_state.chat_history.append({"role": "user", "content": text_input})
@@ -193,61 +308,6 @@ for chat in st.session_state.chat_history:
         else:
             st.image(ai_img, width=50)
         st.write(chat["content"])
-
-
-# 스크롤 버튼 추가 (버튼을 오른쪽 하단에 고정)
-scroll_css = """
-    <style>
-        .scroll-buttons {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            z-index: 1000;
-        }
-        .scroll-buttons button {
-            width: 50px;
-            height: 50px;
-            font-size: 20px;
-            border-radius: 50%;
-            border: none;
-            background-color: #ffffff;
-            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
-            cursor: pointer;
-        }
-        .scroll-buttons button:hover {
-            background-color: #f0f0f0;
-        }
-    </style>
-"""
-st.markdown(scroll_css, unsafe_allow_html=True)
-
-
-# JavaScript로 스크롤 기능 추가
-scroll_js = """
-    <script>
-        function scrollToTop() {
-            window.scrollTo({top: 0, behavior: 'smooth'});
-        }
-        function scrollToBottom() {
-            window.scrollTo({top: document.body.scrollHeight, behavior: 'smooth'});
-        }
-    </script>
-"""
-st.markdown(scroll_js, unsafe_allow_html=True)
-
-
-# HTML로 버튼 추가 (오른쪽 하단에 고정)
-scroll_buttons_html = """
-    <div class="scroll-buttons">
-        <button onclick="scrollToTop()">⬆️</button>
-        <button onclick="scrollToBottom()">⬇️</button>
-    </div>
-"""
-st.markdown(scroll_buttons_html, unsafe_allow_html=True)
-
 
 
 if st.button("🛑 종료"):
