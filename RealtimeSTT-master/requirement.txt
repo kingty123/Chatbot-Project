@@ -12,10 +12,8 @@ python-magic-bin
 faiss-cpu
 pyttsx3
 sounddevice
-pygame
 gtts
 PyAudio==0.2.14
 faster-whisper==1.1.1
 torch
 scipy==1.15.1
-
