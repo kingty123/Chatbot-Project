@@ -35,7 +35,7 @@ css = """
         }
 
         .chat-message {
-            background-color: #f0f2f6;
+            background: none;
             padding: 10px;
             border-radius: 10px;
             max-width: 80%;
@@ -52,17 +52,28 @@ css = """
 
         .scroll-buttons {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            display: flex;
+            bottom: 0;
+            right: 0;
+            display: flex; 
             flex-direction: column;
-            gap: 10px;
-            z-index: 1000;
+            gap: 0;
+            z-index: 10;
+            margin: 0;
+        }
+
+        .scroll-buttons button {
+            background: none; /* 배경색 제거 */
+            border: none; /* 외곽선 제거 */
+            padding: 0; /* 패딩 제거 */
+            font-size: 24px; /* 버튼 크기 조정 */
+            cursor: pointer;
         }
         
         .scroll-buttons button:hover {
             background-color: #f0f0f0;
-        }   
+        } 
+
+        
     </style>
 """
 
@@ -74,15 +85,6 @@ js = """
         }
         function scrollToBottom() {
             window.scrollTo({top: document.body.scrollHeight, behavior: 'smooth'});
-        }
-
-        var audio = document.querySelector("audio");
-        if (audio) {
-            audio.autoplay = true;
-            audio.muted = false; 
-            audio.addEventListener("ended", function() {
-                console.log("Audio playback completed.");
-            });
         }
     </script>
 """
@@ -101,6 +103,8 @@ components.html(
     height=200,  # 필요에 따라 높이 조정
 )
 
+
+
 st.title("🎙️ SelenaAI ")
 
 sys.stdout.reconfigure(encoding='utf-8')        # 이모티콘 사용 용이
@@ -108,17 +112,24 @@ warnings.filterwarnings("ignore")
 ai_img = "WOODZ_군복.jpg"
 user_img = "사람이미지_1.jpg"
 
+
+
 # Whisper 모델 로드 (캐싱 사용)
 @st.cache_resource
 def load_faster_whisper_model():
     model = faster_whisper.WhisperModel("medium", device="cpu", compute_type="int8")  # 모델 크기 및 compute_type 조정 가능
     return model
 
+
 model = load_faster_whisper_model()
+
+
 
 # 환경변수 로드
 load_dotenv()
 client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
+
+
 
 # 사이드바 생성
 with st.sidebar:
@@ -175,9 +186,13 @@ def speak_gtts(text):
         if 'audio_file' in locals():
             audio_file.close()
 
+
+
 # 최종 TTS 실행 함수
 def speak(text):
     speak_gtts(text)
+
+
 
 # GPT 응답 생성
 def ask_gpt(user_input):
@@ -194,6 +209,8 @@ def ask_gpt(user_input):
         return chat_completion.choices[0].message.content
     except Exception as e:
         return f"❌ 오류 발생: {str(e)}"
+
+
 
 # 음성 녹음 버튼
 if st.button("🎤 SelenaAI 입니다. 무엇이든 편하게 질문하세요"):
