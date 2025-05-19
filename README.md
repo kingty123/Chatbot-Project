@@ -36,9 +36,9 @@
 <br>
 
 - 상세 정보
-  1) 실시간 STT : record_audio함수를 사용하여 녹은된 사용자 음성을 faster_whisper(medium)으로 텍스트 변환
+  1) 실시간 STT : record_audio함수를 사용하여 녹음된 사용자 음성을 faster_whisper(medium)으로 텍스트 변환
   2) TTS : gTTS로 음성 파일 생성한 후, Streamlit으로 채팅 메세지 및 오디오 음성 출력
-  3) OpenAI GPT-4-turbi : 자연어 처리 및 응답 생성
+  3) OpenAI GPT-4-turbo : 자연어 처리 및 응답 생성
 
 
 
