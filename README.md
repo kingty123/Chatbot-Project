@@ -42,6 +42,10 @@
 
 
 
+https://github.com/user-attachments/assets/9557967e-514b-4d29-8461-ff1849ac635f
+
+
+
 
 - 피드백
   1) Pros : gTTS와 Streamlit을 사용하여, cpu 사용량을 줄였다. 그리고 음성인식할 때, 버튼으로 녹음을 시작하여 음성 인식률을 높였습니다.
